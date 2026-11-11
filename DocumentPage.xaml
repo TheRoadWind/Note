@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:services="clr-namespace:Note.Services"
+             x:Class="Note.DocumentPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource AppBg}">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <Grid Grid.Row="0" Padding="12,14,12,10" ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="6">
+            <Border BackgroundColor="{StaticResource AppCard}"
+                    StrokeThickness="0"
+                    Padding="10,7">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBackClicked" />
+                </Border.GestureRecognizers>
+                <Label Text="返回" FontSize="12" TextColor="{StaticResource AppText}" />
+            </Border>
+
+            <Label Grid.Column="1"
+                   x:Name="FileLabel"
+                   FontSize="14"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource AppText}"
+                   LineBreakMode="MiddleTruncation"
+                   HorizontalTextAlignment="Center"
+                   VerticalOptions="Center" />
+
+            <Border Grid.Column="2"
+                    x:Name="TocButton"
+                    IsVisible="False"
+                    BackgroundColor="{StaticResource AppAccentSoft}"
+                    StrokeThickness="0"
+                    Padding="10,7">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnTocClicked" />
+                </Border.GestureRecognizers>
+                <Label Text="目录" FontSize="12" TextColor="{StaticResource AppAccent}" />
+            </Border>
+
+            <Border Grid.Column="3"
+                    BackgroundColor="{StaticResource AppAccent}"
+                    StrokeThickness="0"
+                    Padding="10,7">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnSaveAsNoteClicked" />
+                </Border.GestureRecognizers>
+                <Label Text="存为便签" FontSize="12" TextColor="White" />
+            </Border>
+        </Grid>
+
+        <Grid x:Name="PagerBar"
+              Grid.Row="1"
+              Padding="16,0,16,8"
+              ColumnDefinitions="Auto,*,Auto"
+              ColumnSpacing="8">
+            <Button x:Name="PrevButton"
+                    Text="← 上一页"
+                    Clicked="OnPrevPage"
+                    BackgroundColor="{StaticResource AppCard}"
+                    TextColor="{StaticResource AppText}"
+                    FontSize="12"
+                    Padding="10,4"
+                    CornerRadius="14"
+                    HeightRequest="34"
+                    MinimumHeightRequest="34" />
+
+            <Label x:Name="PageLabel"
+                   Grid.Column="1"
+                   FontSize="11"
+                   TextColor="{StaticResource AppTextSub}"
+                   LineBreakMode="TailTruncation"
+                   HorizontalTextAlignment="Center"
+                   VerticalOptions="Center" />
+
+            <Button x:Name="NextButton"
+                    Grid.Column="2"
+                    Text="下一页 →"
+                    Clicked="OnNextPage"
+                    BackgroundColor="{StaticResource AppAccentSoft}"
+                    TextColor="{StaticResource AppAccent}"
+                    FontSize="12"
+                    Padding="10,4"
+                    CornerRadius="14"
+                    HeightRequest="34"
+                    MinimumHeightRequest="34" />
+        </Grid>
+
+        <Border Grid.Row="2"
+                Margin="12,0,12,12"
+                BackgroundColor="{StaticResource AppCard}"
+                StrokeThickness="0"
+                Padding="0">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="16" />
+            </Border.StrokeShape>
+
+            <Grid>
+                <WebView x:Name="DocWebView" IsVisible="False" Navigated="OnWebViewNavigated" />
+                <ScrollView x:Name="TextScroll">
+                    <Label x:Name="DocLabel"
+                           Padding="16"
+                           FontSize="15"
+                           LineHeight="1.6"
+                           TextColor="{StaticResource AppText}" />
+                </ScrollView>
+
+                <!-- 仅展示状态，不拦截 WebView 的触摸 -->
+                <Border x:Name="AutoHint"
+                        IsVisible="False"
+                        InputTransparent="True"
+                        BackgroundColor="#E6FFFFFF"
+                        StrokeThickness="0"
+                        Padding="12,6"
+                        Margin="0,10,0,0"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Start">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14" />
+                    </Border.StrokeShape>
+                    <Label x:Name="AutoHintLabel"
+                           InputTransparent="True"
+                           FontSize="11"
+                           TextColor="{StaticResource AppAccent}" />
+                </Border>
+
+                <Label x:Name="TapHint"
+                       InputTransparent="True"
+                       Text="左右点击/滑动翻页 · 中间设置自动滑动"
+                       FontSize="10"
+                       TextColor="#B4B9C0"
+                       HorizontalOptions="Center"
+                       VerticalOptions="End"
+                       Margin="0,0,0,10" />
+            </Grid>
+        </Border>
+
+        <!-- 自动生成的目录 -->
+        <Grid x:Name="TocOverlay"
+              Grid.Row="0"
+              Grid.RowSpan="3"
+              IsVisible="False">
+            <BoxView Color="#88000000">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCloseTocClicked" />
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+            <Border Margin="20,56"
+                    BackgroundColor="{StaticResource AppCard}"
+                    StrokeThickness="0"
+                    Padding="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="18" />
+                </Border.StrokeShape>
+                <Grid RowDefinitions="Auto,*,Auto">
+                    <Grid Grid.Row="0" Padding="18,16,14,8" ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="目录"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource AppText}" />
+                            <Label x:Name="TocCountLabel"
+                                   Text="共 0 章"
+                                   FontSize="12"
+                                   TextColor="{StaticResource AppTextSub}" />
+                        </VerticalStackLayout>
+                        <Border Grid.Column="1"
+                                BackgroundColor="{StaticResource AppBg}"
+                                StrokeThickness="0"
+                                Padding="10,6"
+                                VerticalOptions="Start">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnCloseTocClicked" />
+                            </Border.GestureRecognizers>
+                            <Label Text="✕" FontSize="13" TextColor="{StaticResource AppTextSub}" />
+                        </Border>
+                    </Grid>
+
+                    <CollectionView x:Name="TocList"
+                                    Grid.Row="1"
+                                    SelectionMode="None"
+                                    VerticalScrollBarVisibility="Never">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="services:ChapterInfo">
+                                <Border Margin="12,3"
+                                        BackgroundColor="{StaticResource AppBg}"
+                                        StrokeThickness="0"
+                                        Padding="12,10">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="10" />
+                                    </Border.StrokeShape>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnChapterTapped" CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                        <Label Text="{Binding Marker}"
+                                               FontSize="12"
+                                               TextColor="{StaticResource AppAccent}"
+                                               VerticalOptions="Center" />
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Title}"
+                                               FontSize="14"
+                                               TextColor="{StaticResource AppText}"
+                                               LineBreakMode="TailTruncation"
+                                               VerticalOptions="Center" />
+                                        <Label Grid.Column="2"
+                                               Text="{Binding CharCountText}"
+                                               FontSize="11"
+                                               TextColor="{StaticResource AppTextFaint}"
+                                               VerticalOptions="Center" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Button Grid.Row="2"
+                            Text="从头阅读"
+                            Clicked="OnRestartClicked"
+                            Margin="16,8,16,16"
+                            BackgroundColor="{StaticResource AppAccentSoft}"
+                            TextColor="{StaticResource AppAccent}"
+                            FontSize="14"
+                            CornerRadius="14"
+                            HeightRequest="40" />
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+
+</ContentPage>

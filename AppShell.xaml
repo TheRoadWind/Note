@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Shell
+    x:Class="Note.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Note"
+    FlyoutBehavior="Disabled"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarBackgroundColor="White"
+    Shell.TabBarTitleColor="#FFB000"
+    Shell.TabBarUnselectedColor="#8B9099"
+    Title="便签">
+
+    <TabBar>
+        <ShellContent
+            Title="主页"
+            Route="main"
+            ContentTemplate="{DataTemplate local:MainPage}" />
+        <ShellContent
+            Title="文件"
+            Route="files"
+            ContentTemplate="{DataTemplate local:FilesPage}" />
+    </TabBar>
+
+</Shell>

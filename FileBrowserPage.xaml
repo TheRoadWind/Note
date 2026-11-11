@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Note"
+             x:Class="Note.FileBrowserPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource AppBg}">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <Grid Grid.Row="0" Padding="12,14,12,8" ColumnDefinitions="Auto,*" ColumnSpacing="8">
+            <Border BackgroundColor="{StaticResource AppCard}" StrokeThickness="0" Padding="12,7">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBackClicked" />
+                </Border.GestureRecognizers>
+                <Label Text="返回" FontSize="13" TextColor="{StaticResource AppText}" />
+            </Border>
+            <Label Grid.Column="1"
+                   x:Name="TitleLabel"
+                   FontSize="15"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource AppText}"
+                   LineBreakMode="MiddleTruncation"
+                   VerticalOptions="Center" />
+        </Grid>
+
+        <Border Grid.Row="1"
+                Margin="12,0,12,8"
+                BackgroundColor="{StaticResource AppCard}"
+                StrokeThickness="0"
+                Padding="12,7">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="14" />
+            </Border.StrokeShape>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnUpClicked" />
+            </Border.GestureRecognizers>
+            <Label x:Name="PathLabel"
+                   FontSize="12"
+                   TextColor="{StaticResource AppTextSub}"
+                   LineBreakMode="MiddleTruncation" />
+        </Border>
+
+        <CollectionView x:Name="EntryList"
+                        Grid.Row="2"
+                        SelectionMode="None"
+                        BackgroundColor="{StaticResource AppBg}">
+            <CollectionView.EmptyView>
+                <Label Text="当前目录没有可显示的文件"
+                       FontSize="14"
+                       TextColor="{StaticResource AppTextSub}"
+                       Margin="0,60,0,0"
+                       HorizontalTextAlignment="Center" />
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="local:FileEntry">
+                    <Border Margin="16,4"
+                            BackgroundColor="{StaticResource AppCard}"
+                            StrokeThickness="0"
+                            Padding="14,12">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12" />
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnEntryTapped" CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                            <Label Text="{Binding IconText}" FontSize="20" VerticalOptions="Center" />
+                            <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                <Label Text="{Binding Name}"
+                                       FontSize="15"
+                                       TextColor="{StaticResource AppText}"
+                                       LineBreakMode="MiddleTruncation" />
+                                <Label Text="{Binding DetailText}"
+                                       FontSize="11"
+                                       TextColor="{StaticResource AppTextFaint}" />
+                            </VerticalStackLayout>
+                            <Label Grid.Column="2"
+                                   Text="›"
+                                   FontSize="18"
+                                   TextColor="{StaticResource AppTextFaint}"
+                                   IsVisible="{Binding IsFolder}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+
+</ContentPage>

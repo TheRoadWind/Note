@@ -1,0 +1,33 @@
+# ==== 通用 ====
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# ==== .NET / VB.NET ====
+bin/
+obj/
+Debug/
+Release/
+.vs/
+*.suo
+*.user
+*.vbproj.user
+
+# ==== Python ====
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# ==== 构建产物 ====
+*.exe
+*.dll
+*.pdb
+*.zip
+*.7z
+
+# ==== 编辑器 ====
+.idea/
+.vscode/

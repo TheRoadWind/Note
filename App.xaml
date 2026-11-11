@@ -1,0 +1,54 @@
+﻿<?xml version = "1.0" encoding = "UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Note"
+             x:Class="Note.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Color x:Key="AppAccent">#FFB000</Color>
+            <Color x:Key="AppAccentSoft">#FFF6DE</Color>
+            <Color x:Key="AppBg">#F4F5F7</Color>
+            <Color x:Key="AppCard">#FFFFFF</Color>
+            <Color x:Key="AppText">#1E2126</Color>
+            <Color x:Key="AppTextSub">#8B9099</Color>
+            <Color x:Key="AppTextFaint">#B4B9C0</Color>
+            <Color x:Key="AppDivider">#EDEFF2</Color>
+            <Color x:Key="AppDanger">#F0554A</Color>
+
+            <Style x:Key="HeaderTitle" TargetType="Label">
+                <Setter Property="FontSize" Value="30" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource AppText}" />
+            </Style>
+
+            <Style x:Key="HeaderSub" TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="{StaticResource AppTextSub}" />
+            </Style>
+
+            <Style x:Key="CardTitle" TargetType="Label">
+                <Setter Property="FontSize" Value="17" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource AppText}" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="CardPreview" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource AppTextSub}" />
+                <Setter Property="MaxLines" Value="2" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="CardTime" TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource AppTextFaint}" />
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

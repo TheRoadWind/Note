@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Note.Models"
+             x:Class="Note.FilesPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource AppBg}">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <Grid Grid.Row="0" Padding="20,18,16,10" ColumnDefinitions="*">
+            <VerticalStackLayout Spacing="2">
+                <Label Text="文件" Style="{StaticResource HeaderTitle}" />
+                <Label x:Name="CountLabel" Text="共 0 条浏览记录" Style="{StaticResource HeaderSub}" />
+            </VerticalStackLayout>
+        </Grid>
+
+        <Grid Grid.Row="1" Padding="16,4,16,10" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+            <Border BackgroundColor="{StaticResource AppCard}"
+                    StrokeThickness="0"
+                    Padding="12,9">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14" />
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBrowseClicked" />
+                </Border.GestureRecognizers>
+                <Label Text="浏览手机存储" FontSize="13" TextColor="{StaticResource AppText}" HorizontalTextAlignment="Center" />
+            </Border>
+            <Border Grid.Column="1"
+                    BackgroundColor="{StaticResource AppCard}"
+                    StrokeThickness="0"
+                    Padding="12,9">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14" />
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnClearClicked" />
+                </Border.GestureRecognizers>
+                <Label Text="清空记录" FontSize="13" TextColor="{StaticResource AppTextSub}" />
+            </Border>
+        </Grid>
+
+        <CollectionView x:Name="HistoryList"
+                        Grid.Row="2"
+                        SelectionMode="None"
+                        BackgroundColor="{StaticResource AppBg}"
+                        VerticalScrollBarVisibility="Never">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout Padding="32,80,32,0" Spacing="10" HorizontalOptions="Center">
+                    <Border BackgroundColor="{StaticResource AppAccentSoft}"
+                            WidthRequest="72"
+                            HeightRequest="72"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="36" />
+                        </Border.StrokeShape>
+                        <Label Text="≡"
+                               FontSize="34"
+                               TextColor="{StaticResource AppAccent}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Border>
+                    <Label Text="还没有浏览记录"
+                           FontSize="16"
+                           TextColor="{StaticResource AppTextSub}"
+                           HorizontalTextAlignment="Center" />
+                    <Label Text="打开过的文档会显示在这里，并记住上次读到的位置"
+                           FontSize="13"
+                           TextColor="{StaticResource AppTextFaint}"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:DocumentRecord">
+                    <SwipeView Margin="16,6">
+                        <SwipeView.RightItems>
+                            <SwipeItems Mode="Reveal">
+                                <SwipeItem Text="删除记录"
+                                           BackgroundColor="{StaticResource AppDanger}"
+                                           Invoked="OnDeleteInvoked"
+                                           CommandParameter="{Binding .}" />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+
+                        <Border BackgroundColor="{StaticResource AppCard}"
+                                StrokeThickness="0"
+                                Padding="16,14">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="16" />
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="#14000000" Offset="0,2" Radius="8" Opacity="1" />
+                            </Border.Shadow>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnRecordTapped" CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="5">
+                                <Label Grid.Row="0"
+                                       Text="{Binding FileName}"
+                                       Style="{StaticResource CardTitle}" />
+                                <Label Grid.Row="1"
+                                       Text="{Binding PositionText}"
+                                       FontSize="13"
+                                       TextColor="{StaticResource AppAccent}"
+                                       LineBreakMode="TailTruncation" />
+                                <Label Grid.Row="2"
+                                       Text="{Binding DetailText}"
+                                       FontSize="11"
+                                       TextColor="{StaticResource AppTextFaint}" />
+                                <Label Grid.Row="3"
+                                       Text="{Binding PathText}"
+                                       FontSize="11"
+                                       TextColor="{StaticResource AppTextFaint}"
+                                       LineBreakMode="MiddleTruncation" />
+                            </Grid>
+                        </Border>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.Footer>
+                <BoxView HeightRequest="24" Color="#F4F5F7" />
+            </CollectionView.Footer>
+        </CollectionView>
+    </Grid>
+
+</ContentPage>

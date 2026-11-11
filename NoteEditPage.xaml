@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Note.NoteEditPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource AppCard}">
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto">
+
+        <!-- 工具栏 -->
+        <Grid Grid.Row="0" Padding="12,14,12,4" ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="6">
+            <Border BackgroundColor="{StaticResource AppBg}"
+                    StrokeThickness="0"
+                    Padding="12,7">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBackClicked" />
+                </Border.GestureRecognizers>
+                <Label Text="返回" FontSize="13" TextColor="{StaticResource AppText}" />
+            </Border>
+
+            <Label Grid.Column="1"
+                   x:Name="SavedHint"
+                   FontSize="12"
+                   TextColor="{StaticResource AppTextFaint}"
+                   HorizontalTextAlignment="Center"
+                   VerticalOptions="Center" />
+
+            <Border Grid.Column="2"
+                    x:Name="PinButton"
+                    BackgroundColor="{StaticResource AppBg}"
+                    StrokeThickness="0"
+                    Padding="12,7">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnPinClicked" />
+                </Border.GestureRecognizers>
+                <Label x:Name="PinLabel" Text="置顶" FontSize="13" TextColor="{StaticResource AppText}" />
+            </Border>
+
+            <Border Grid.Column="3"
+                    BackgroundColor="{StaticResource AppBg}"
+                    StrokeThickness="0"
+                    Padding="12,7">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnDeleteClicked" />
+                </Border.GestureRecognizers>
+                <Label Text="删除" FontSize="13" TextColor="{StaticResource AppDanger}" />
+            </Border>
+        </Grid>
+
+        <!-- 标题 -->
+        <Entry x:Name="TitleEntry"
+               Grid.Row="1"
+               Margin="16,10,16,0"
+               Placeholder="标题"
+               PlaceholderColor="{StaticResource AppTextFaint}"
+               TextColor="{StaticResource AppText}"
+               FontSize="24"
+               FontAttributes="Bold"
+               TextChanged="OnTextChanged" />
+
+        <!-- 每条便签单独的背景色与字体属性 -->
+        <Grid x:Name="StylePanel"
+              Grid.Row="2"
+              IsVisible="False"
+              Padding="16,8,16,0"
+              RowDefinitions="Auto,Auto"
+              RowSpacing="8">
+            <Grid Grid.Row="0" ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                <Label Text="背景"
+                       WidthRequest="34"
+                       FontSize="12"
+                       TextColor="{StaticResource AppTextSub}"
+                       VerticalOptions="Center" />
+                <HorizontalStackLayout x:Name="ColorRow" Grid.Column="1" Spacing="8" />
+            </Grid>
+            <Grid Grid.Row="1" ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                <Label Text="字体"
+                       WidthRequest="34"
+                       FontSize="12"
+                       TextColor="{StaticResource AppTextSub}"
+                       VerticalOptions="Center" />
+                <HorizontalStackLayout x:Name="FontRow" Grid.Column="1" Spacing="6" />
+            </Grid>
+        </Grid>
+
+        <!-- 正文与内嵌图片 -->
+        <Grid Grid.Row="3" RowDefinitions="*,Auto">
+            <Editor x:Name="BodyEditor"
+                    Grid.Row="0"
+                    Margin="12,4,12,0"
+                    Placeholder="开始输入…"
+                    PlaceholderColor="{StaticResource AppTextFaint}"
+                    TextColor="{StaticResource AppText}"
+                    FontSize="16"
+                    AutoSize="Disabled"
+                    VerticalOptions="Fill"
+                    TextChanged="OnTextChanged" />
+
+            <ScrollView x:Name="ImageScroller"
+                        Grid.Row="1"
+                        Orientation="Horizontal"
+                        IsVisible="False"
+                        HeightRequest="96"
+                        VerticalScrollBarVisibility="Never">
+                <HorizontalStackLayout x:Name="ImageStrip" Spacing="8" Padding="12,4" />
+            </ScrollView>
+        </Grid>
+
+        <!-- 底部工具：复制 / 插入图片 / 样式 -->
+        <Grid Grid.Row="4" Padding="16,6,12,12" ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="6">
+            <Label x:Name="StatusLabel"
+                   FontSize="12"
+                   TextColor="{StaticResource AppTextFaint}"
+                   VerticalOptions="Center" />
+            <Button Grid.Column="1"
+                    Text="复制"
+                    Clicked="OnCopyClicked"
+                    BackgroundColor="{StaticResource AppBg}"
+                    TextColor="{StaticResource AppText}"
+                    FontSize="12"
+                    Padding="10,4"
+                    CornerRadius="14"
+                    HeightRequest="36"
+                    MinimumHeightRequest="36" />
+            <Button Grid.Column="2"
+                    Text="图片"
+                    Clicked="OnInsertImageClicked"
+                    BackgroundColor="{StaticResource AppBg}"
+                    TextColor="{StaticResource AppText}"
+                    FontSize="12"
+                    Padding="10,4"
+                    CornerRadius="14"
+                    HeightRequest="36"
+                    MinimumHeightRequest="36" />
+            <Button Grid.Column="3"
+                    Text="样式"
+                    Clicked="OnStyleClicked"
+                    BackgroundColor="{StaticResource AppAccentSoft}"
+                    TextColor="{StaticResource AppAccent}"
+                    FontSize="12"
+                    Padding="10,4"
+                    CornerRadius="14"
+                    HeightRequest="36"
+                    MinimumHeightRequest="36" />
+        </Grid>
+    </Grid>
+
+</ContentPage>

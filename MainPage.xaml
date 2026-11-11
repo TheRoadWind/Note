@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Note.Models"
+             x:Class="Note.MainPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource AppBg}">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <!-- 顶部标题栏 -->
+        <Grid Grid.Row="0" Padding="20,18,16,10" ColumnDefinitions="*,Auto">
+            <VerticalStackLayout Spacing="2">
+                <Label Text="便签" Style="{StaticResource HeaderTitle}" />
+                <Label x:Name="CountLabel" Text="共 0 条便签" Style="{StaticResource HeaderSub}" />
+            </VerticalStackLayout>
+
+            <Border Grid.Column="1"
+                    BackgroundColor="{StaticResource AppCard}"
+                    StrokeThickness="0"
+                    Padding="14,8"
+                    VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="18" />
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnOpenFileClicked" />
+                </Border.GestureRecognizers>
+                <Label Text="打开新文件"
+                       FontSize="13"
+                       TextColor="{StaticResource AppText}" />
+            </Border>
+        </Grid>
+
+        <!-- 搜索栏 -->
+        <Border Grid.Row="1"
+                Margin="16,4,16,10"
+                BackgroundColor="{StaticResource AppCard}"
+                StrokeThickness="0"
+                Padding="14,0"
+                HeightRequest="44">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="22" />
+            </Border.StrokeShape>
+            <Entry x:Name="SearchEntry"
+                   Placeholder="搜索便签标题或内容"
+                   PlaceholderColor="{StaticResource AppTextFaint}"
+                   TextColor="{StaticResource AppText}"
+                   FontSize="14"
+                   ClearButtonVisibility="WhileEditing"
+                   TextChanged="OnSearchTextChanged" />
+        </Border>
+
+        <!-- 便签列表 -->
+        <Grid Grid.Row="2">
+            <CollectionView x:Name="NoteList"
+                            SelectionMode="None"
+                            BackgroundColor="{StaticResource AppBg}"
+                            ItemsUpdatingScrollMode="KeepItemsInView"
+                            VerticalScrollBarVisibility="Never">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Padding="32,90,32,0" Spacing="10" HorizontalOptions="Center">
+                        <Border BackgroundColor="{StaticResource AppAccentSoft}"
+                                WidthRequest="72"
+                                HeightRequest="72"
+                                StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="36" />
+                            </Border.StrokeShape>
+                            <Label Text="+"
+                                   FontSize="36"
+                                   TextColor="{StaticResource AppAccent}"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center" />
+                        </Border>
+                        <Label Text="暂无便签"
+                               FontSize="16"
+                               TextColor="{StaticResource AppTextSub}"
+                               HorizontalTextAlignment="Center" />
+                        <Label Text="点击右下角按钮记录第一条想法"
+                               FontSize="13"
+                               TextColor="{StaticResource AppTextFaint}"
+                               HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:NoteItem">
+                        <SwipeView Margin="16,6">
+                            <SwipeView.RightItems>
+                                <SwipeItems Mode="Reveal">
+                                    <SwipeItem Text="{Binding PinActionText}"
+                                               BackgroundColor="{StaticResource AppAccent}"
+                                               Invoked="OnPinInvoked"
+                                               CommandParameter="{Binding .}" />
+                                    <SwipeItem Text="删除"
+                                               BackgroundColor="{StaticResource AppDanger}"
+                                               Invoked="OnDeleteInvoked"
+                                               CommandParameter="{Binding .}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+
+                            <Border BackgroundColor="{Binding CardBackground}"
+                                    StrokeThickness="0"
+                                    Padding="16,14">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+                                <Border.Shadow>
+                                    <Shadow Brush="#14000000" Offset="0,2" Radius="8" Opacity="1" />
+                                </Border.Shadow>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnNoteTapped" CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+
+                                <Grid RowDefinitions="Auto,Auto,Auto"
+                                      ColumnDefinitions="*,Auto"
+                                      RowSpacing="6">
+                                    <Label Grid.Row="0"
+                                           Grid.Column="0"
+                                           Text="{Binding DisplayTitle}"
+                                           FontSize="{Binding TitleFontSize}"
+                                           FontAttributes="Bold"
+                                           Style="{StaticResource CardTitle}" />
+                                    <Border Grid.Row="0"
+                                            Grid.Column="1"
+                                            IsVisible="{Binding IsPinned}"
+                                            BackgroundColor="{StaticResource AppAccentSoft}"
+                                            StrokeThickness="0"
+                                            Padding="7,2"
+                                            VerticalOptions="Start">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="8" />
+                                        </Border.StrokeShape>
+                                        <Label Text="置顶"
+                                               FontSize="10"
+                                               TextColor="{StaticResource AppAccent}" />
+                                    </Border>
+
+                                    <Label Grid.Row="1"
+                                           Grid.ColumnSpan="2"
+                                           Text="{Binding Preview}"
+                                           FontSize="{Binding PreviewFontSize}"
+                                           FontAttributes="{Binding BodyFontAttributes}"
+                                           Style="{StaticResource CardPreview}" />
+
+                                    <Label Grid.Row="2"
+                                           Grid.ColumnSpan="2"
+                                           Text="{Binding TimeText}"
+                                           Style="{StaticResource CardTime}" />
+                                </Grid>
+                            </Border>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.Footer>
+                    <BoxView HeightRequest="110" Color="#F4F5F7" />
+                </CollectionView.Footer>
+            </CollectionView>
+
+            <!-- 新建按钮 -->
+            <Button Text="+"
+                    Clicked="OnAddClicked"
+                    HorizontalOptions="End"
+                    VerticalOptions="End"
+                    Margin="0,0,22,40"
+                    WidthRequest="60"
+                    HeightRequest="60"
+                    CornerRadius="30"
+                    FontSize="30"
+                    Padding="0"
+                    BackgroundColor="{StaticResource AppAccent}"
+                    TextColor="White">
+                <Button.Shadow>
+                    <Shadow Brush="#55FFB000" Offset="0,4" Radius="10" Opacity="1" />
+                </Button.Shadow>
+            </Button>
+        </Grid>
+    </Grid>
+
+</ContentPage>
